@@ -1,44 +1,47 @@
-Nested Types
-
-// A nested type is declared within the scope of another type. For example:
+using System;
 
 public class TopLevel
 {
-  public class Nested { }               // Nested class
-  public enum Color { Red, Blue, Tan }  // Nested enum
+    private static int x = 42;
+
+    public enum Color { Red, Blue, Tan }
+
+    public class Nested
+    {
+        public static void Foo()
+        {
+            Console.WriteLine("Accessing private member x from TopLevel: " + TopLevel.x);
+        }
+    }
+
+    protected class ProtectedNested
+    {
+        public void Hello()
+        {
+            Console.WriteLine("Hello from ProtectedNested class!");
+        }
+    }
+
+    public class SubTopLevel : TopLevel
+    {
+        public void ShowProtected()
+        {
+            ProtectedNested pn = new ProtectedNested();
+            pn.Hello();
+        }
+    }
 }
 
-static void Main()
+class Program
 {
-  TopLevel.Color color = TopLevel.Color.Red;  
-}
-Nested Types - Private Member Visibility
+    static void Main()
+    {
+        TopLevel.Color myColor = TopLevel.Color.Red;
+        Console.WriteLine("Selected color: " + myColor);
 
-public class TopLevel
-{
-  static int x;
-  public class Nested
-  {
-    public static void Foo() { Console.WriteLine (TopLevel.x); }
-  }
-}
+        TopLevel.Nested.Foo();
 
-static void Main()
-{
-  TopLevel.Nested.Foo();
-}
-Nested Types - Protected Member Visibility
-
-public class TopLevel
-{
-  protected class Nested { }
-}
-
-public class SubTopLevel : TopLevel
-{
-  static void Foo() { new TopLevel.Nested(); }
-}
-
-static void Main()
-{
+        TopLevel.SubTopLevel sub = new TopLevel.SubTopLevel();
+        sub.ShowProtected();
+    }
 }
